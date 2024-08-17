@@ -1,8 +1,6 @@
 using DG.Tweening;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
@@ -82,7 +80,8 @@ public class GameController : MonoBehaviour
     {
         stairsObj = Instantiate(obj, pos, Quaternion.identity);
         SpriteRenderer spriteRenderer = stairsObj.GetComponent<SpriteRenderer>();
-        spriteRenderer.size = new Vector2(spriteRenderer.size.x, 0);
+        stairsObj.transform.Rotate(0, 0, 90);
+        spriteRenderer.size = new Vector2(0, spriteRenderer.size.y);
     }
 
 
@@ -98,7 +97,7 @@ public class GameController : MonoBehaviour
 
         Debug.Log("Started");
         startStairs = true;
-        
+
     }
 
 
@@ -121,11 +120,11 @@ public class GameController : MonoBehaviour
         {
             if (spriteRenderer.size.y > stairsMaxLength)
             {
-                spriteRenderer.size = new Vector2(spriteRenderer.size.x, 0);
+                spriteRenderer.size = new Vector2(0, spriteRenderer.size.y);
             }
             else
             {
-                spriteRenderer.size = new Vector2(spriteRenderer.size.x, spriteRenderer.size.y + growingfactor);
+                spriteRenderer.size = new Vector2(spriteRenderer.size.x + growingfactor, spriteRenderer.size.y );
             }
         }
 
@@ -151,11 +150,12 @@ public class GameController : MonoBehaviour
 
     public void AlignStairs()
     {
-        stairsObj.transform.DOLocalRotate(new Vector3(0, 0, -90), 2.0f, RotateMode.LocalAxisAdd).OnComplete(StartMovingPlayer);
+        stairsObj.transform.DOLocalRotate(new Vector3(0, 0,-90), 2.0f, RotateMode.LocalAxisAdd).OnComplete(StartMovingPlayer);
     }
     void StartMovingPlayer()
     {
-        float length = stairsObj.transform.position.x + stairsObj.GetComponent<SpriteRenderer>().size.y;
+        float length =stairsObj.transform.position.x + stairsObj.GetComponent<SpriteRenderer>().size.x * stairsObj.transform.localScale.x;
+        Debug.LogError(length.ToString());
         playerBoy.transform.DOMoveX(length, 2).OnComplete(CheckPlayerStatus);
     }
 
@@ -163,8 +163,8 @@ public class GameController : MonoBehaviour
     {
         GameObject currentTower = pillarsList[1];
         float diff = currentTower.transform.position.x - playerBoy.transform.position.x;
-        Debug.Log(currentTower+"_diff_" + diff);
-        if ( Math.Abs(diff) < ignoreWidth)
+        Debug.Log(currentTower + "_diff_" + diff);
+        if (Math.Abs(diff) < ignoreWidth)
         {
 
             Debug.Log("reached");
