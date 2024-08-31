@@ -11,7 +11,7 @@ public class DataManager : MonoBehaviour
 
     void Start()
     {
-
+        _currentScore = 0;
     }
 
     // Update is called once per frame
@@ -35,6 +35,10 @@ public class DataManager : MonoBehaviour
         else
         {
             HeighestScoreText.text = lastScore.ToString();
+        }
+        foreach (var score in currentScoreText)
+        {
+            score.text = _currentScore.ToString();
         }
 
         gameEndPanel.SetActive(true);

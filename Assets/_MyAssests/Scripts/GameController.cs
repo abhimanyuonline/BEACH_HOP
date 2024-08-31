@@ -7,6 +7,7 @@ public class GameController : MonoBehaviour
 {
     [SerializeField]
     GameObject playerBoy;
+    [SerializeField] Animator animatorPlayer;
     [SerializeField] Vector2 playerBoyInitialLoc = new Vector2();
 
 
@@ -31,6 +32,7 @@ public class GameController : MonoBehaviour
 
     [SerializeField] bool startIncreaingStair = false;
 
+
     [SerializeField]
     GameObject stairsObj;
     [SerializeField]
@@ -44,7 +46,10 @@ public class GameController : MonoBehaviour
 
     [SerializeField] float ignoreWidth = 0.0f;
 
-
+    private void Start()
+    {
+        animatorPlayer = playerBoy.GetComponent<Animator>();
+    }
     public void OnClick_StartGameScene()
     {
         ResetGameplay();
@@ -73,12 +78,10 @@ public class GameController : MonoBehaviour
         num++;
     }
 
-    //private void Playboy(GameObject char )
-
-
     private void SpawnStairs(GameObject obj, Vector2 pos)
     {
-        stairsObj = Instantiate(obj, pos, Quaternion.identity);
+        var newPos =  new Vector2(pos.x+1, pos.y);
+        stairsObj = Instantiate(obj, newPos, Quaternion.identity);
         SpriteRenderer spriteRenderer = stairsObj.GetComponent<SpriteRenderer>();
         stairsObj.transform.Rotate(0, 0, 90);
         spriteRenderer.size = new Vector2(0, spriteRenderer.size.y);
@@ -150,17 +153,20 @@ public class GameController : MonoBehaviour
 
     public void AlignStairs()
     {
+        stairsObj.transform.DOLocalMoveX(stairsStartingPos.x,1);
         stairsObj.transform.DOLocalRotate(new Vector3(0, 0,-90), 2.0f, RotateMode.LocalAxisAdd).OnComplete(StartMovingPlayer);
     }
     void StartMovingPlayer()
     {
         float length =stairsObj.transform.position.x + stairsObj.GetComponent<SpriteRenderer>().size.x * stairsObj.transform.localScale.x;
         Debug.LogError(length.ToString());
-        playerBoy.transform.DOMoveX(length, 2).OnComplete(CheckPlayerStatus);
+        playerBoy.transform.DOMoveX(length, 3).OnComplete(CheckPlayerStatus);
+        animatorPlayer.SetBool("Walk", true);
     }
 
     void CheckPlayerStatus()
     {
+        animatorPlayer.SetBool("Walk", false);
         GameObject currentTower = pillarsList[1];
         float diff = currentTower.transform.position.x - playerBoy.transform.position.x;
         Debug.Log(currentTower + "_diff_" + diff);
@@ -197,9 +203,11 @@ public class GameController : MonoBehaviour
 
     void UnSucssefullyReached()
     {
+
         float currentY = playerBoy.transform.position.y;
         playerBoy.transform.DOMoveY(-7.0f, 2);
         stairsObj.transform.DOLocalRotate(new Vector3(0, 0, -90), 2.0f, RotateMode.LocalAxisAdd).OnComplete(AfterUnSucessfullPlayerReach);
+        animatorPlayer.SetBool("Fall", true);
     }
 
     void AfterSucessfullPlayerReach()
