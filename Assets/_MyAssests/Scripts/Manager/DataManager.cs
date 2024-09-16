@@ -48,4 +48,9 @@ public class DataManager : MonoBehaviour
     {
         SceneManager.LoadScene(0);
     }
+
+    private void CurrentSelectedCharIndex()
+    {
+
+    }
 }

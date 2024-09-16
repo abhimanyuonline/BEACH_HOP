@@ -10,8 +10,7 @@ public class SoundManager : MonoBehaviour
     public Slider musicSlider, sfxSlider;
 
     public Button musicButton;
-    public Sprite unmuteVolumeSprite;
-    public Sprite muteVolumeSprite;
+
 
 
     private void Awake()
@@ -26,14 +25,6 @@ public class SoundManager : MonoBehaviour
 
 
         var currentVolume = PlayerPrefs.GetInt("Volume");
-        if (currentVolume >= 0)
-        {
-            musicButton.GetComponent<Image>().sprite = unmuteVolumeSprite;
-        }
-        else
-        {
-            musicButton.GetComponent<Image>().sprite = muteVolumeSprite;
-        }
         musicSource.GetComponent<AudioSource>().volume = currentVolume;
     }
     public void PlayMusic(string name)
@@ -72,22 +63,5 @@ public class SoundManager : MonoBehaviour
         Debug.Log(sfxSlider.value);
         sfxSlider.value = sfxSlider.value;
     }
-    public void UpdateMuteUnmuteSettting()
-    {
-        var currentVolume = PlayerPrefs.GetInt("Volume");
-        Debug.Log("Current Volume"+currentVolume);
-        if (currentVolume >= 0)
-        {
-            musicButton.GetComponent<Image>().sprite = muteVolumeSprite;
-            PlayerPrefs.SetInt("Volume", -1);
-            
-        }
-        else
-        {
-            PlayerPrefs.SetInt("Volume", 1);
-            musicButton.GetComponent<Image>().sprite = unmuteVolumeSprite;
-        }
-        musicSource.GetComponent<AudioSource>().volume = PlayerPrefs.GetInt("Volume");
-
-    }
+   
 }

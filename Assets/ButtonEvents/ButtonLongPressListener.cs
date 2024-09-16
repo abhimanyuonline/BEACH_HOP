@@ -15,11 +15,8 @@ using UnityEngine.UI ;
 public class ButtonLongPressListener : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
     [Tooltip("Hold duration in seconds")]
-    [Range(0.0f, 5f)] public float holdDuration = 0.5f;
+    [Range(0.3f, 5f)] public float holdDuration = 0.5f;
     public UnityEvent onLongPress;
-
-
-    public UnityEvent onLongPressEnded;
 
     private bool isPointerDown = false;
     private bool isLongPressed = false;
@@ -45,7 +42,6 @@ public class ButtonLongPressListener : MonoBehaviour, IPointerDownHandler, IPoin
     public void OnPointerUp(PointerEventData eventData) {
         isPointerDown = false;
         isLongPressed = false;
-        onLongPressEnded?.Invoke();
     }
 
     private IEnumerator Timer() {
